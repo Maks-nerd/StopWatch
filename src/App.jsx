@@ -1,5 +1,5 @@
 // Модули
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Observable, Subject } from 'rxjs';
 import { map, buffer, debounceTime, filter, takeUntil } from 'rxjs/operators';
 
@@ -17,27 +17,29 @@ const App = () => {
     setState(true);
   };
 
-  const stopTime = useCallback(() => {
+  const stopTime = () => {
     setTime(0);
     setState(false);
-  }, []);
+  };
 
-  const resetTime = useCallback(() => {
+  const resetTime = () => {
     setTime(0);
-  }, []);
+    setState(true);
+  };
 
-  const waitTime = useCallback(() => {
+  const waitTime = () => {
     click.next();
-    setState(false);
-    click.next();
-  }, [click]);
+  };
 
   useEffect(() => {
     const doubleClick = click.pipe(
       buffer(click.pipe(debounceTime(300))),
       map(clicks => clicks.length),
-      filter(clicks => clicks >= 2),
+      filter(clicks => clicks === 2),
     );
+
+    doubleClick.subscribe(click => (click ? setState(false) : ''));
+
     const timer = new Observable(observer => {
       let count = 0;
       const intervalId = setInterval(() => {
