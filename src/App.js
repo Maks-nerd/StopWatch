@@ -25,9 +25,8 @@ function App() {
 
     return () => clearInterval(interval);
   }, [start]);
-
   return (
-    <div className="App">
+    <div className="App sdsd">
       <h1>StopWatch</h1>
       <h1>
         <span className="me-3">{('0' + Math.floor(( time / 60000 ) % 60)).slice(-2)}</span>
